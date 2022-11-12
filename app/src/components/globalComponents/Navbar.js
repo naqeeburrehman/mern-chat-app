@@ -10,9 +10,11 @@ const Navbar = () => {
             <Link to="/">
                 <button>Home</button>
             </Link>
-
             {token ? (
                 <>
+                    <Link to="/chat">
+                        <button>Chat</button>
+                    </Link>
                     <Link to="/profile">
                         <button>Profile</button>
                     </Link>

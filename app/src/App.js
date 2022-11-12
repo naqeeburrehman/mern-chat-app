@@ -1,15 +1,18 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/globalComponents/Layout";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Profile from "./pages/Profile";
+
+import Home from "./pages/globalPages/Home";
+import Login from "./pages/globalPages/Login";
+import Signup from "./pages/globalPages/Signup";
+import Profile from "./pages/authPages/Profile";
+import Chat from "./pages/authPages/Chat";
+
 import Prefetch from "./features/auth/Prefetch";
 import PersistUnprotected from "./features/auth/PersistUnprotected";
 import PersistProtected from "./features/auth/PersistProtected";
 import RequireAuth from "./features/auth/RequireAuth";
 import { ROLES } from "./config/roles";
 import useTitle from "./hooks/useTitle";
-import Signup from "./pages/Signup";
 
 function App() {
     useTitle("Mern Auth Aest");
@@ -29,6 +32,7 @@ function App() {
                     <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
                         <Route element={<Prefetch />}>
                             <Route path="profile" element={<Profile />} />
+                            <Route path="chat" element={<Chat />} />
                             <Route element={<RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />}></Route>
                         </Route>
                     </Route>

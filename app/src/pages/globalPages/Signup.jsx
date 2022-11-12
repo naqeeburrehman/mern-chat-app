@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSignupMutation } from "../features/auth/authApiSlice";
+import { useSignupMutation } from "../../features/auth/authApiSlice";
 
 const Signup = () => {
     const [signup, { isLoading }] = useSignupMutation();
