@@ -45,23 +45,24 @@ app.use(fileUpload({ createParentPath: true }));
 app.use("/", express.static(path.join(__dirname, "/public")));
 
 // Socket io Routes
+io.on("connection", require("./routes/socket/routes"));
+
+// Api Routes
 app.use("/register", require("./routes/api/register"));
 app.use("/auth", require("./routes/api/auth"));
 app.use("/refresh", require("./routes/api/refresh"));
 app.use("/logout", require("./routes/api/logout"));
 
-io.on("connection", require("./routes/socket/routes"));
-
-// Api Routes
 app.use("/chat", require("./routes/api/chat"));
+app.use("/search", require("./routes/api/search"));
 
 app.all("/*", (req, res) => {
-    console.log("404 resource not found".red);
+    console.log("404 path not found".red);
     res.status(404);
     if (req.accepts("json")) {
-        res.json({ error: "404 Not Found" });
+        res.json({ error: "404 path Not Found" });
     } else {
-        res.type("txt").send("404 Not Found");
+        res.type("txt").send("404 path Not Found");
     }
 });
 

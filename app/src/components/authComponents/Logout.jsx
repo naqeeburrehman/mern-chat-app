@@ -1,3 +1,4 @@
+import { ArrowLeftOnRectangleIcon, ArrowPathRoundedSquareIcon } from "@heroicons/react/24/solid";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSendLogoutMutation } from "../../features/auth/authApiSlice";
@@ -7,18 +8,10 @@ const Logout = () => {
 
     const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation();
 
-    let content;
-
     useEffect(() => {
         if (isSuccess) navigate("/");
     }, [isSuccess, navigate]);
-    
-    if(isLoading){
-        content = <button>Logging out</button> 
-    }
 
-    content = <button onClick={sendLogout}>Logout</button>
-
-    return content;
+    return <button disabled={isLoading} onClick={sendLogout}>{isLoading ? <ArrowPathRoundedSquareIcon className="h-6 w-6"/> : <ArrowLeftOnRectangleIcon className="h-6 w-6" />  }</button>;
 };
 export default Logout;

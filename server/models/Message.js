@@ -15,6 +15,16 @@ const messageSchema = new Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Chat",
         },
+        delete: {
+            status: {
+                type: Boolean,
+                default: false,
+            },
+            time: {
+                type: Date,
+                default: null,
+            },
+        },
     },
     { timestamps: true }
 );
