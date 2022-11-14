@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema(
     {
         phone: {
-            type: Number,
+            type: String,
             required: true,
         },
         name: {
@@ -29,6 +29,16 @@ const userSchema = new Schema(
             Admin: Number,
         },
         refreshToken: [String],
+        delete: {
+            status: {
+                type: Boolean,
+                default: false,
+            },
+            time: {
+                type: Date,
+                default: null,
+            },
+        },
     },
     { timestamps: true }
 );
