@@ -5,20 +5,8 @@ const appVariables = require("../config/appVariables");
 const path = require("path");
 const fs = require("fs");
 
-const fetchChats = async (req, res) => {
-    return res.send("fetchChats");
-};
-const accessChat = async (req, res) => {
-    return res.send("accessChat");
-};
-
 const getChats = async (req, res) => {
-    let query = {
-        "delete.status": { $ne: true },
-        catagory: { $in: req.query.c },
-        _id: { $in: req.query.id },
-        userId: { $in: req.query.uid },
-    };
+    let query = { "delete.status": { $ne: true }, catagory: { $in: req.query.c }, _id: { $in: req.query.id }, userId: { $in: req.query.uid } };
     if (!req?.query?.c || req?.query?.c == null) delete query.catagory;
     if (!req?.query?.uid || req?.query?.uid == null) delete query.userId;
     if (!req?.query?.id || req?.query?.id == null) delete query._id;
@@ -190,12 +178,10 @@ const deleteListing = async (req, res) => {
 };
 
 module.exports = {
-    fetchChats,
-    accessChat,
-    // getChats,
-    // getUserChats,
-    // createNewChat,
-    // updateChat,
-    // addChatFile,
-    // deleteChat,
+    getChats,
+    getUserChats,
+    createNewChat,
+    updateChat,
+    addChatFile,
+    deleteChat,
 };

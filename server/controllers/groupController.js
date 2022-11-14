@@ -5,11 +5,17 @@ const appVariables = require("../config/appVariables");
 const path = require("path");
 const fs = require("fs");
 
-const fetchChats = async (req, res) => {
-    return res.send("fetchChats");
+const createGroupChat = async (req, res) => {
+    return res.send("createGroupChat");
 };
-const accessChat = async (req, res) => {
-    return res.send("accessChat");
+const renameGroup = async (req, res) => {
+    return res.send("renameGroup");
+};
+const addToGroup = async (req, res) => {
+    return res.send("addToGroup");
+};
+const removeFromGroup = async (req, res) => {
+    return res.send("removeFromGroup");
 };
 
 const getChats = async (req, res) => {
@@ -23,7 +29,7 @@ const getChats = async (req, res) => {
     if (!req?.query?.uid || req?.query?.uid == null) delete query.userId;
     if (!req?.query?.id || req?.query?.id == null) delete query._id;
     if (!req?.query?.q || isNumber(req?.query?.q) === false) req.query.q = 24;
-    chats = await listingModel.find(query).limit(req.query.q);
+    chats = await chatModel.find(query).limit(req.query.q);
     if (!chats || chats.length < 1) {
         console.log("no chats found".red);
         return res.status(204).json({ error: "No Chats found" });
@@ -36,7 +42,7 @@ const getUserChats = async (req, res) => {
     let query = { "delete.status": { $ne: true }, catagory: { $in: req.query.c }, userId: { $in: req.user } };
     if (!req?.query?.c || req?.query?.c == null) delete query.catagory;
     if (!req?.query?.q || isNumber(req?.query?.q) === false) req.query.q = null;
-    chats = await listingModel.find(query).limit(req.query.q);
+    chats = await chatModel.find(query).limit(req.query.q);
     if (!chats || chats.length < 1) {
         console.log("no chats found".red);
         return res.status(204).json({ error: "No Chats found" });
@@ -45,7 +51,7 @@ const getUserChats = async (req, res) => {
     return res.json(chats);
 };
 
-const createNewListing = async (req, res) => {
+const createNewChat = async (req, res) => {
     let { title, description, price, catagory, quantity, condition, size, color } = req.body;
     if (
         !title ||
@@ -77,7 +83,7 @@ const createNewListing = async (req, res) => {
     expiredAt = date.setDate(date.getDate() + appVariables.chatsExpiryDate);
     variables = { quantity, condition, size, color };
     try {
-        const result = await listingModel.create({
+        const result = await chatModel.create({
             images,
             title,
             description,
@@ -88,8 +94,8 @@ const createNewListing = async (req, res) => {
             expiredAt,
             variables,
         });
-        console.log("new listing added successfully".green);
-        return res.status(201).json({ message: "New Listing Added Successfully", result });
+        console.log("new chat added successfully".green);
+        return res.status(201).json({ message: "New Chat Added Successfully", result });
     } catch (err) {
         images.forEach((image) => {
             fs.unlink(`public/images/${image}`, (err) => {
@@ -103,7 +109,7 @@ const createNewListing = async (req, res) => {
     }
 };
 
-const updateListing = async (req, res) => {
+const updateChat = async (req, res) => {
     console.log(req.params.id.grey);
     if (!req?.params?.id) {
         console.log("missing id param".red);
@@ -111,35 +117,35 @@ const updateListing = async (req, res) => {
     }
     let query = { _id: req.params.id, userId: { $in: req.user } };
     if (req.roles.includes(ROLES_LIST.Admin)) delete query.userId;
-    const listing = await listingModel.findOne(query).exec();
-    if (!listing) {
-        console.log("id param didnt matched any listing".red);
-        return res.status(204).json({ error: `No listing matches ID ${req.params.id}.` });
+    const chat = await chatModel.findOne(query).exec();
+    if (!chat) {
+        console.log("id param didnt matched any chat".red);
+        return res.status(204).json({ error: `No chat matches ID ${req.params.id}.` });
     }
-    if (req.body?.title) listing.title = req.body.title;
-    if (req.body?.description) listing.description = req.body.description;
-    if (req.body?.price) listing.price = req.body.price;
-    if (req.body?.catagory) listing.catagory = req.body.catagory;
-    if (req.body?.quantity) listing.variables.quantity = req.body.quantity;
-    if (req.body?.condition) listing.variables.condition = req.body.condition;
-    if (req.body?.size) listing.variables.size = req.body.size;
-    if (req.body?.color) listing.variables.color = req.body.color;
-    const result = await listing.save();
-    console.log("listing updated successfuly".green);
-    return res.status(201).json({ message: "Listing Updated Successfully", result });
+    if (req.body?.title) chat.title = req.body.title;
+    if (req.body?.description) chat.description = req.body.description;
+    if (req.body?.price) chat.price = req.body.price;
+    if (req.body?.catagory) chat.catagory = req.body.catagory;
+    if (req.body?.quantity) chat.variables.quantity = req.body.quantity;
+    if (req.body?.condition) chat.variables.condition = req.body.condition;
+    if (req.body?.size) chat.variables.size = req.body.size;
+    if (req.body?.color) chat.variables.color = req.body.color;
+    const result = await chat.save();
+    console.log("chat updated successfuly".green);
+    return res.status(201).json({ message: "Chat Updated Successfully", result });
 };
 
-const addListingFile = async (req, res) => {
+const addChatFile = async (req, res) => {
     if (!req?.params?.id) {
         console.log("missing required id param".red);
         return res.status(400).json({ error: "ID parameter is required." });
     }
     let query = { _id: req.params.id, userId: { $in: req.user } };
     if (req.roles.includes(ROLES_LIST.Admin)) delete query.userId;
-    const listing = await listingModel.findOne(query).exec();
-    if (!listing) {
-        console.log("id param didnt matched any listing".red);
-        return res.status(204).json({ error: `No listing matches ID ${req.params.id}.` });
+    const chat = await chatModel.findOne(query).exec();
+    if (!chat) {
+        console.log("id param didnt matched any chat".red);
+        return res.status(204).json({ error: `No chat matches ID ${req.params.id}.` });
     }
     if (req.files) {
         let files = req.files;
@@ -152,26 +158,26 @@ const addListingFile = async (req, res) => {
                     return res.status(500).json({ error: err });
                 }
             });
-            listing.images.push(`${req.user}${fileDate}${files[key].name}`);
+            chat.images.push(`${req.user}${fileDate}${files[key].name}`);
         });
     }
-    const result = await listing.save();
+    const result = await chat.save();
     console.log("file added successfully".green);
-    res.status(201).json({ message: "Listing Updated Successfully", result });
+    res.status(201).json({ message: "Chat Updated Successfully", result });
 };
 
-const deleteListing = async (req, res) => {
-    if (!req?.params?.id) return res.status(400).json({ error: "listing ID required" });
+const deleteChat = async (req, res) => {
+    if (!req?.params?.id) return res.status(400).json({ error: "chat ID required" });
     let query = { _id: req.params.id, userId: { $in: req.user } };
     if (req.roles.includes(ROLES_LIST.Admin)) delete query.userId;
-    const listing = await listingModel.findOne(query).exec();
-    if (!listing) {
-        console.log("id param didnt matched any listing".red);
-        return res.status(204).json({ error: `listing ID ${req.params.id} not found` });
+    const chat = await chatModel.findOne(query).exec();
+    if (!chat) {
+        console.log("id param didnt matched any chat".red);
+        return res.status(204).json({ error: `chat ID ${req.params.id} not found` });
     }
     if (req.body?.delete) {
-        listing.delete.status = true;
-        listing.delete.date = new Date();
+        chat.delete.status = true;
+        chat.delete.date = new Date();
     }
     if (req.body?.image) {
         fs.unlink(`public/images/${req.body.image}`, (err) => {
@@ -179,19 +185,21 @@ const deleteListing = async (req, res) => {
                 console.log("fs.unlink error".red);
             }
         });
-        let index = listing.images.includes(req.body.image);
+        let index = chat.images.includes(req.body.image);
         if (index === true) {
-            listing.images.splice(index, 1);
+            chat.images.splice(index, 1);
         }
     }
-    const result = await listing.save();
+    const result = await chat.save();
     console.log("deleted successfully".green);
     res.status(201).json({ message: "Deleted Successfully", result });
 };
 
 module.exports = {
-    fetchChats,
-    accessChat,
+    createGroupChat,
+    renameGroup,
+    addToGroup,
+    removeFromGroup,
     // getChats,
     // getUserChats,
     // createNewChat,

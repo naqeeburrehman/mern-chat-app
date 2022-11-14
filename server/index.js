@@ -54,6 +54,7 @@ app.use("/refresh", require("./routes/api/refresh"));
 app.use("/logout", require("./routes/api/logout"));
 
 app.use("/chat", require("./routes/api/chat"));
+app.use("/group", require("./routes/api/group"));
 app.use("/search", require("./routes/api/search"));
 
 app.all("/*", (req, res) => {
