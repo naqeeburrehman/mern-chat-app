@@ -14,6 +14,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const { logger } = require("./middleware/logEvents");
 const { getServerIp } = require("./functions/ip");
+const verifyJWT = require("./middleware/verifyJWT");
 const PORT = process.env.PORT || 3500;
 
 // Connect to MongoDB
@@ -52,6 +53,8 @@ app.use("/register", require("./routes/api/register"));
 app.use("/auth", require("./routes/api/auth"));
 app.use("/refresh", require("./routes/api/refresh"));
 app.use("/logout", require("./routes/api/logout"));
+
+app.use(verifyJWT);
 
 app.use("/chat", require("./routes/api/chat"));
 app.use("/group", require("./routes/api/group"));
