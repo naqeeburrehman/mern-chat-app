@@ -177,6 +177,124 @@ const deleteListing = async (req, res) => {
     res.status(201).json({ message: "Deleted Successfully", result });
 };
 
+
+
+const createGroupChat = async (req, res) => {
+    let { users, name } = req.body;
+    if (!users || !name) return res.status(400).json({ error: "Missing fields in request" });
+    if (users.length < 2)
+        return res.status(400).json({ error: "More then 2 users are required to create a group chat" });
+    users.push(req.user);
+    try {
+        const groupChat = await chatModel.create({
+            chatName: name,
+            users,
+            isGroupChat: true,
+            groupAdmin: req.user,
+        });
+        const fullChat = await chatModel
+            .findOne({ _id: groupChat._id })
+            .populate("users", "-password -refreshToken -delete")
+            .populate("groupAdmin", "-password -refreshToken -delete");
+        return res.status(200).json(fullChat);
+    } catch (err) {
+        console.log(`${err}`.red);
+        return res.status(500).json({ error: "internal server occured" });
+    }
+};
+
+const updateGroup = async (req, res) => {
+    const { chatName } = req.body;
+    if (!req?.params?.id) {
+        console.log("missing id param".red);
+        return res.status(400).json({ error: "ID parameter is required." });
+    }
+    let message = "nothing to be updated";
+    let query = { _id: req.params.id, isGroupChat: { $eq: true }, groupAdmin: { $in: req.user } };
+    if (req.roles.includes(ROLES_LIST.Admin)) delete query.groupAdmin;
+    const chat = await chatModel
+        .findOne(query)
+        .populate("users", "-password -refreshToken -delete")
+        .populate("groupAdmin", "-password -refreshToken -delete")
+        .exec();
+    if (!chat) {
+        console.log("id param didnt matched any chat".red);
+        return res.status(204).json({ error: `No group found.` });
+    }
+    if (req.body?.chatName) {
+        chat.chatName = chatName;
+        console.log("Group Name Updated successfuly".green);
+        message = "Group Name Updated Successfully";
+    }
+    const result = await chat.save();
+    return res.status(201).json({ message, result });
+};
+
+const addToGroup = async (req, res) => {
+    const { userId } = req.body;
+    if (!req.params?.id) {
+        console.log("missing required id param".red);
+        return res.status(400).json({ error: "ID parameter is required." });
+    }
+    let message = "nothing to add";
+    let query = { _id: req.params.id, isGroupChat: { $eq: true }, groupAdmin: { $in: req.user } };
+    if (req.roles.includes(ROLES_LIST.Admin)) delete query.groupAdmin;
+    const chat = await chatModel
+        .findOne(query)
+        // .populate("users", "-password -refreshToken -delete")
+        // .populate("groupAdmin", "-password -refreshToken -delete")
+        .exec();
+    if (!chat) {
+        console.log("id param didnt matched any chat".red);
+        return res.status(204).json({ error: `No group found.` });
+    }
+    if (req.body?.userId) {
+        let index = chat.users.includes(userId);
+        if (index == true) {
+            console.log("User already exists".red);
+            return res.status(409).json({ error: "User already exists" });
+        } else {
+            chat.users.push(userId);
+            console.log("User added successfully".green);
+            message = "User added successfully";
+        }
+    } else return res.status(400).json({ error: "User ID is required." });
+
+    const result = await chat.save();
+    return res.status(201).json({ message, result });
+};
+
+const removeFromGroup = async (req, res) => {
+    const { userId } = req.body;
+    if (!req.params?.id) {
+        console.log("missing required id param".red);
+        return res.status(400).json({ error: "ID parameter is required." });
+    }
+    let query = { _id: req.params.id, isGroupChat: { $eq: true }, groupAdmin: { $in: req.user } };
+    if (req.roles.includes(ROLES_LIST.Admin)) delete query.groupAdmin;
+    const chat = await chatModel
+        .findOne(query)
+        .populate("users", "-password -refreshToken -delete")
+        .populate("groupAdmin", "-password -refreshToken -delete")
+        .exec();
+    if (!chat) {
+        console.log("id param didnt matched any chat".red);
+        return res.status(204).json({ error: `No group found.` });
+    }
+    if (req.body?.userId) {
+        let index = chat.users.includes(userId);
+        if (index === true) {
+            chat.users = chat.users.filter((user) => user !== userId);
+            console.log("User removed successfully".green);
+            message = "User removed";
+        } else {
+            console.log("Incorrect user ID".red);
+            return res.status(400).json({ error: "Incorrect user ID" });
+        }
+    }
+    const result = await chat.save();
+    return res.status(201).json({ message: "user removed", result });
+};
 module.exports = {
     getChats,
     getUserChats,
