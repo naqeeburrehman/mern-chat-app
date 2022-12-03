@@ -1,12 +1,20 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../../features/auth/authApiSlice";
+import { selectCurrentToken } from "../../features/auth/authSlice";
 
 const Signup = () => {
     const [signup, { isLoading }] = useSignupMutation();
-
+    const token = useSelector(selectCurrentToken);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (token) {
+            navigate("/", { replace: true });
+        }
+    }, [token]);
 
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
@@ -44,17 +52,17 @@ const Signup = () => {
 
     return (
         <form
-            className="bg-[url('./assets/bg.png')] fixed flex flex-col justify-center items-center bg-gray-100 w-full h-full"
+            className="bg-[url('./assets/bg.png')] fixed flex flex-col justify-center items-center bg-secondary-100 w-full h-full"
             onSubmit={onSignup}
         >
             <span className=" font-bold pb-4 text-xl">Signup</span>
-            {errMsg ? <p className=" text-red-600 my-2 py-1 px-3 rounded text-sm bg-red-100">{errMsg}</p> : null}
+            {errMsg ? <p className=" text-primary-600 my-2 py-1 px-3 rounded text-sm bg-primary-100">{errMsg}</p> : null}
             <div className="flex flex-col my-2 ">
-                <label className="pl-4 pb-1 text-gray-500 text-sm" htmlFor="phone">
+                <label className="pl-4 pb-1 text-secondary-500 text-sm" htmlFor="phone">
                     Phone :
                 </label>
                 <input
-                    className="w-60 px-4 py-2 rounded-full text-gray-700"
+                    className="w-60 px-4 py-2 rounded text-secondary-700"
                     id="phone"
                     type="number"
                     value={phone}
@@ -62,11 +70,11 @@ const Signup = () => {
                 />
             </div>
             <div className="flex flex-col my-2">
-                <label className="pl-4 pb-1 text-gray-500 text-sm" htmlFor="name">
+                <label className="pl-4 pb-1 text-secondary-500 text-sm" htmlFor="name">
                     Username :
                 </label>
                 <input
-                    className="w-60 px-4 py-2 rounded-full text-gray-700"
+                    className="w-60 px-4 py-2 rounded text-secondary-700"
                     id="name"
                     type="text"
                     value={name}
@@ -74,12 +82,12 @@ const Signup = () => {
                 />
             </div>
             <div className="flex flex-col my-2">
-                <label className="pl-4 pb-1 text-gray-500 text-sm" htmlFor="password">
+                <label className="pl-4 pb-1 text-secondary-500 text-sm" htmlFor="password">
                     Password :
                 </label>
                 <span className="relative">
                     <input
-                        className="w-60 pl-4 pr-10 py-2 rounded-full text-gray-700"
+                        className="w-60 pl-4 pr-10 py-2 rounded text-secondary-700"
                         id="password"
                         type={`${showPassword.password ? "text" : "password"}`}
                         value={password}
@@ -93,7 +101,7 @@ const Signup = () => {
                                     password: !showPassword.password,
                                 }))
                             }
-                            className="absolute top-2 right-3 h-6 w-6 text-gray-700"
+                            className="absolute top-2 right-3 h-6 w-6 text-secondary-700"
                         />
                     ) : (
                         <EyeIcon
@@ -103,18 +111,18 @@ const Signup = () => {
                                     password: !showPassword.password,
                                 }))
                             }
-                            className="absolute top-2 right-3 h-6 w-6 text-gray-700"
+                            className="absolute top-2 right-3 h-6 w-6 text-secondary-700"
                         />
                     )}
                 </span>
             </div>
             <div className="flex flex-col my-2">
-                <label className="pl-4 pb-1 text-gray-500 text-sm" htmlFor="confirm-password">
+                <label className="pl-4 pb-1 text-secondary-500 text-sm" htmlFor="confirm-password">
                     Confirm Password :
                 </label>
                 <span className="relative">
                     <input
-                        className="w-60 pl-4 pr-10 py-2 rounded-full text-gray-700"
+                        className="w-60 pl-4 pr-10 py-2 rounded text-secondary-700"
                         id="confirm-password"
                         type={`${showPassword.confirmPassword ? "text" : "password"}`}
                         value={confirmPassword}
@@ -128,7 +136,7 @@ const Signup = () => {
                                     confirmPassword: !showPassword.confirmPassword,
                                 }))
                             }
-                            className="absolute top-2 right-3 h-6 w-6 text-gray-700"
+                            className="absolute top-2 right-3 h-6 w-6 text-secondary-700"
                         />
                     ) : (
                         <EyeIcon
@@ -138,14 +146,14 @@ const Signup = () => {
                                     confirmPassword: !showPassword.confirmPassword,
                                 }))
                             }
-                            className="absolute top-2 right-3 h-6 w-6 text-gray-700"
+                            className="absolute top-2 right-3 h-6 w-6 text-secondary-700"
                         />
                     )}
                 </span>
             </div>
             <button
                 disabled={isLoading}
-                className={`px-4 py-2 my-4 rounded-full text-white ${isLoading ? "bg-gray-300" : "bg-red-600"}`}
+                className={`px-4 py-2 my-4 rounded text-white ${isLoading ? "bg-secondary-400" : "bg-primary-600 hover:bg-primary-500"}`}
                 type="submit"
             >
                 {isLoading ? "Registering" : "Signup"}

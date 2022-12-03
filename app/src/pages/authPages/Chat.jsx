@@ -1,7 +1,12 @@
-const Chat = () => {
-  return (
-    <div>Chat</div>
-  )
-}
+import Navbar from "../../components/Navbar";
 
-export default Chat
+const Chat = () => {
+    return (
+        <section>
+            <Navbar path={"/"} title={"Chat"} />
+            <div>Chat</div>
+        </section>
+    );
+};
+
+export default Chat;

@@ -7,7 +7,7 @@ const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) {
         console.log("no jwt cookie found".red);
-        return res.sendStatus(401);
+        return res.status(401).json({message:'Un authorized'});
     }
     console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + cookies.jwt);
     const refreshToken = cookies.jwt;
@@ -19,13 +19,13 @@ const handleRefreshToken = async (req, res) => {
     if (!foundUser) {
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
             console.log("no user is found".red);
-            if (err) return res.sendStatus(403); //Forbidden
+            if (err) return res.status(403).json({message:'Forbidden'}); //Forbidden
             console.log("attempted refresh token reuse!".magenta);
             const hackedUser = await User.findOne({ _id: decoded.id }).exec();
             hackedUser.refreshToken = [];
             const result = await hackedUser.save();
         });
-        return res.sendStatus(403); //Forbidden
+        return res.status(403).json({message:'Forbidden'}); //Forbidden
     }
 
     const newRefreshTokenArray = foundUser.refreshToken.filter((rt) => rt !== refreshToken);
@@ -40,7 +40,7 @@ const handleRefreshToken = async (req, res) => {
 
         if (err || foundUser.id !== decoded.id) {
             console.log("expired or incorrect token".red);
-            return res.sendStatus(403);
+            return res.status(403).json({message:'Forbidden'});
         }
 
         // Refresh token was still valid
@@ -56,7 +56,7 @@ const handleRefreshToken = async (req, res) => {
         cookieFunctions.createCookie(res, newRefreshToken);
 
         console.log("cookie and token created successfully".green);
-        return res.json({ accessToken });
+        return res.status(201).json({ accessToken });
     });
 };
 
