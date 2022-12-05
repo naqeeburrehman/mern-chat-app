@@ -3,7 +3,7 @@ import ContactList from "../../components/ContactList";
 import Navbar from "../../components/Navbar";
 
 const Home = () => {
-    const contacts = [
+    const contacts = {ids:[1,2,3,4,5],entities:[
         {
             id: 1,
             phone: "0360595818",
@@ -34,7 +34,7 @@ const Home = () => {
             name: "naqeeb",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTux6W-JOnzu6w_aZW0TO1OqEqexEaBOtQ9sgWDDZlJUsz0Lso&s",
         },
-    ];
+    ]};
 
     return (
         <section>

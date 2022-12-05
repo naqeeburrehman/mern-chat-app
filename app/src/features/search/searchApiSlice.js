@@ -27,21 +27,10 @@ export const searchsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: "Search", id: "LIST" }];
             },
         }),
-        searchPost: builder.mutation({
-            query(data) {
-                return {
-                    url: "search?u=321",
-                    method: "POST",
-                    credentials: "include",
-                    body: data,
-                };
-            },
-            invalidatesTags: (result, error, arg) => [{ type: "Search", id: arg.id }],
-        }),
     }),
 });
 
-export const { useGetSearchsQuery, useSearchPostMutation } = searchsApiSlice;
+export const { useGetSearchsQuery } = searchsApiSlice;
 
 // returns the query result object
 export const selectSearchsResult = searchsApiSlice.endpoints.getSearchs.select();

@@ -2,73 +2,67 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import ContactList from "../../components/ContactList";
 import Navbar from "../../components/Navbar";
-import { useGetSearchsQuery, useSearchPostMutation } from "../../features/search/searchApiSlice";
+import { useGetSearchsQuery } from "../../features/search/searchApiSlice";
 
 const Search = () => {
-    // const {
-    //     data: contacts,
-    //     isLoading,
-    //     isSuccess,
-    //     isError,
-    //     error,
-    // } = useGetSearchsQuery(
-    //     { u: "", q: 10 },
-    //     {
-    //         skip:false,
-    //         pollingInterval: 120 * 1000, // in every 2 minutes
-    //         refetchOnFocus: true,
-    //         refetchOnMountOrArgChange: true,
-    //     }
-    // );
+    const [skip, setSkip] = useState(true);
+    const [searchQuery, setSearchQuery] = useState({ u: "", q: 24 });
+    const {
+        data: contacts,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+    } = useGetSearchsQuery(
+        { u: searchQuery.u, q: searchQuery.q },
+        {
+            skip,
+            refetchOnMountOrArgChange: true,
+        }
+    );
+
+    const onSearch = (e, searchValue) => {
+        e.preventDefault();
+        if (searchValue) {
+            setSearchQuery({ u: searchValue });
+            setSkip(false);
+        }
+    };
 
     let contactlist;
-    // if (isLoading) contactlist = <span>Will be adding Skeleton Here Later</span>;
-    // if (isSuccess && contacts) contactlist = <ContactList contacts={contacts} add={true} />;
-
+    if (isLoading) {
+        console.log("i am loading :D");
+        contactlist = <span>Will be adding Skeleton Here Later</span>;
+    }
+    if (isError) {
+        contactlist = <span>{error}</span>;
+    }
+    if (isSuccess && contacts) {
+        contactlist = <ContactList contacts={contacts} add={true} />;
+    }
     console.log("Search Page Rendered");
     return (
         <section>
             <Navbar path={"/"} title={"Search"} />
-            <SearchBar />
-            {/* {contactlist} */}
-            <ContactList />
+            <SearchBar onSearch={onSearch} />
+            {contactlist}
         </section>
     );
 };
 
-const SearchBar = () => {
+const SearchBar = ({ onSearch }) => {
     const [searchValue, setSearchValue] = useState("");
-    const [skip, setSkip] = useState(true);
-    const [getData, { isLoading }] = useSearchPostMutation();
-
-
-    // const {
-    //     data: contacts,
-    //     isLoading,
-    //     isSuccess,
-    //     isError,
-    //     error,
-    // } = useGetSearchsQuery(
-    //     { u: "321", q: 10 },
-    //     {
-    //         skip,
-    //         pollingInterval: 120 * 1000, // in every 2 minutes
-    //         refetchOnFocus: true,
-    //         refetchOnMountOrArgChange: true,
-    //     }
-    // );
-    // console.log(contacts);
 
     console.log("Search Bar Rendered");
 
-    const onSearch = (e) => {
-        e.preventDefault();
-        setSkip(!skip);
-        getData()
-    };
-
     return (
-        <form onSubmit={onSearch} className="flex bg-secondary-100 text-secondary-100 p-2">
+        <form
+            onSubmit={(e) => {
+                onSearch(e, searchValue);
+                setSearchValue("");
+            }}
+            className="flex bg-secondary-100 text-secondary-100 p-2"
+        >
             <input
                 className="text-secondary-700 bg-secondary-300 focus:bg-secondary-200 hover:bg-secondary-200 w-full mr-1 px-4 py-2 rounded"
                 type="text"
