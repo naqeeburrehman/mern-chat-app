@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../features/auth/authSlice";
-import { ArrowLeftIcon, Bars3Icon, PowerIcon } from "@heroicons/react/24/solid";
+import { ArrowLeftIcon, Bars3Icon, PowerIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { ArrowLeftCircleIcon, UserCircleIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -17,14 +17,17 @@ const Navbar = ({ path, title, icon }) => {
 
     return (
         <div>
+            {menu ? (
+                <div onClick={() => setMenu(!menu)} className="fixed w-screen h-screen bg-secondary-900 opacity-80" />
+            ) : null}
             <nav className="fixed w-full flex justify-between items-center bg-primary-700 text-secondary-100 p-4">
                 <Link className="p-1 rounded hover:bg-primary-600 " to={path}>
                     <button className="block w-6 h-6">{icon ? icon : <ArrowLeftIcon />}</button>
                 </Link>
                 <span className="">{title}</span>
                 <div className="relative">
-                    <div onClick={() => setMenu(!menu)} className="cursor-pointer p-1 rounded hover:bg-primary-600 ">
-                        <Bars3Icon className="w-6 h-6" />
+                    <div onClick={() => setMenu(!menu)} className="cursor-pointer p-1 rounded hover:bg-primary-600">
+                        {menu ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
                     </div>
                     <div
                         className={`${

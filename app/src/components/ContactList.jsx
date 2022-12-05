@@ -1,15 +1,28 @@
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { useGetSearchsQuery } from "../features/search/searchApiSlice";
 
-const ContactList = ({ contacts, add }) => {
+const ContactList = ({ add }) => {
+    const { contacts } = useGetSearchsQuery("searchsList", {
+        selectFromResult: ({ data }) => ({
+            contacts: data,
+            // car: data?.entities[carId],
+        }),
+        pollingInterval: 10 * 1000, // in every 2 minutes
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true,
+    });
+
     console.log("contactlist rendered");
-    return (
-        <div className="bg-secondary-200 px-1 py-2 min-h-screen">
-            {contacts.map((contact) => (
-                <ContactCard key={contact.id} data={contact} add={add} />
-            ))}
-        </div>
-    );
+    if (contacts) {
+        console.log(contacts);
+        const { entities } = contacts;
+        let contactCards = [];
+        Object.keys(entities).forEach((key, index) => {
+            contactCards.push(<ContactCard key={entities[key]._id} data={entities[key]} add={add} />);
+        });
+        return <div className="bg-secondary-200 px-1 py-2 min-h-screen">{contactCards}</div>;
+    } else return null;
 };
 
 const ContactCard = ({ data, add }) => {
@@ -23,7 +36,7 @@ const ContactCard = ({ data, add }) => {
                 </div>
             </div>
             <span className="bg-secondary-200 rounded px-2 py-1">{data.phone}</span>
-            <button className="bg-primary-800 text-secondary-100 rounded p-2 hover:bg-primary-700">
+            <button className="bg-primary-600 hover:bg-primary-500 text-secondary-100 rounded p-2 ">
                 <ChatBubbleLeftEllipsisIcon className="w-6 h-6" />
             </button>
         </div>

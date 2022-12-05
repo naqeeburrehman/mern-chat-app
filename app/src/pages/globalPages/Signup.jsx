@@ -1,7 +1,7 @@
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../../features/auth/authApiSlice";
 import { selectCurrentToken } from "../../features/auth/authSlice";
 
@@ -56,7 +56,9 @@ const Signup = () => {
             onSubmit={onSignup}
         >
             <span className=" font-bold pb-4 text-xl">Signup</span>
-            {errMsg ? <p className=" text-primary-600 my-2 py-1 px-3 rounded text-sm bg-primary-100">{errMsg}</p> : null}
+            {errMsg ? (
+                <p className=" text-primary-600 my-2 py-1 px-3 rounded text-sm bg-primary-100">{errMsg}</p>
+            ) : null}
             <div className="flex flex-col my-2 ">
                 <label className="pl-4 pb-1 text-secondary-500 text-sm" htmlFor="phone">
                     Phone :
@@ -151,13 +153,22 @@ const Signup = () => {
                     )}
                 </span>
             </div>
-            <button
-                disabled={isLoading}
-                className={`px-4 py-2 my-4 rounded text-white ${isLoading ? "bg-secondary-400" : "bg-primary-600 hover:bg-primary-500"}`}
-                type="submit"
-            >
-                {isLoading ? "Registering" : "Signup"}
-            </button>{" "}
+            <div className="flex">
+                <Link className="mr-4" to="/login">
+                    <button className={`px-4 py-2 my-4 rounded text-white bg-secondary-400 hover:bg-secondary-300 `} type="button">
+                        Login
+                    </button>
+                </Link>
+                <button
+                    disabled={isLoading}
+                    className={`px-4 py-2 my-4 rounded text-white ${
+                        isLoading ? "bg-secondary-400" : "bg-primary-600 hover:bg-primary-500"
+                    }`}
+                    type="submit"
+                >
+                    {isLoading ? "Registering" : "Signup"}
+                </button>
+            </div>
         </form>
     );
 };

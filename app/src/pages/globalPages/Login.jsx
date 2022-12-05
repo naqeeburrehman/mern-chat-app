@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../features/auth/authApiSlice";
 import { selectCurrentToken, setCredentials } from "../../features/auth/authSlice";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
@@ -101,15 +101,25 @@ const Login = () => {
                     Keep me logged in
                 </label>
             </div>
-            <button
-                disabled={isLoading}
-                className={`px-4 py-2 my-2 rounded text-white ${
-                    isLoading ? "bg-secondary-400" : "bg-primary-600 hover:bg-primary-500"
-                }`}
-                type="submit"
-            >
-                {isLoading ? "Authenticating" : "Login"}
-            </button>
+            <div className="flex">
+                <Link className="mr-4" to="/signup">
+                    <button
+                        className={`px-4 py-2 my-4 rounded text-white bg-secondary-400 hover:bg-secondary-300 `}
+                        type="button"
+                    >
+                        Signup
+                    </button>
+                </Link>
+                <button
+                    disabled={isLoading}
+                    className={`px-4 py-2 my-4 rounded text-white ${
+                        isLoading ? "bg-secondary-400" : "bg-primary-600 hover:bg-primary-500"
+                    }`}
+                    type="submit"
+                >
+                    {isLoading ? "Authenticating" : "Login"}
+                </button>
+            </div>
         </form>
     );
 };
