@@ -20,7 +20,7 @@ const ChatWindow = ({ chat }) => {
         <div className="bg-[url('./assets/bg.png')] bg-fixed bg-secondary-100 w-full min-h-screen">
             <div className="flex flex-col justify-start  mx-3 pt-6 pb-24">
                 {chat.map((text) => (
-                    <span className={`${text.received ? "pr-10" : "pl-10"}`}>
+                    <span key={text.id} className={`${text.received ? "pr-10" : "pl-10"}`}>
                         <p
                             className={`rounded-lg p-1 px-3 mt-1 w-fit ${
                                 text.received ? "mr-auto bg-secondary-200" : "ml-auto bg-primary-600 text-secondary-100"

@@ -5,31 +5,31 @@ import Navbar from "../../components/Navbar";
 const Home = () => {
     const contacts = {ids:[1,2,3,4,5],entities:[
         {
-            id: 1,
+            _id: 1,
             phone: "0360595818",
             name: "naqeeb",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTux6W-JOnzu6w_aZW0TO1OqEqexEaBOtQ9sgWDDZlJUsz0Lso&s",
         },
         {
-            id: 2,
+            _id: 2,
             phone: "0360595818",
             name: "naqeeb",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTux6W-JOnzu6w_aZW0TO1OqEqexEaBOtQ9sgWDDZlJUsz0Lso&s",
         },
         {
-            id: 3,
+            _id: 3,
             phone: "0360595818",
             name: "naqeeb",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTux6W-JOnzu6w_aZW0TO1OqEqexEaBOtQ9sgWDDZlJUsz0Lso&s",
         },
         {
-            id: 4,
+            _id: 4,
             phone: "0360595818",
             name: "naqeeb",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTux6W-JOnzu6w_aZW0TO1OqEqexEaBOtQ9sgWDDZlJUsz0Lso&s",
         },
         {
-            id: 5,
+            _id: 5,
             phone: "0360595818",
             name: "naqeeb",
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTux6W-JOnzu6w_aZW0TO1OqEqexEaBOtQ9sgWDDZlJUsz0Lso&s",

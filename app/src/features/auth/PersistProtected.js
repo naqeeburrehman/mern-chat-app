@@ -4,6 +4,7 @@ import { useRefreshMutation } from "./authApiSlice";
 import usePersist from "../../hooks/usePersist";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "./authSlice";
+import { ArrowPathIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 const PersistLogin = () => {
     const [persist] = usePersist();
@@ -46,16 +47,11 @@ const PersistLogin = () => {
     } else if (isLoading) {
         //persist: yes, token: no
         console.log("loading");
-        content = <p>Loading...</p>;
+        content = <RenderLoading />;
     } else if (isError) {
         //persist: yes, token: no
         console.log("error");
-        content = (
-            <p className="errmsg">
-                {`${error?.data} - `}
-                <Link to="/login">Please login again</Link>.
-            </p>
-        );
+        content = <RenderReLogin error={error} />;
     } else if (isSuccess && trueSuccess) {
         //persist: yes, token: yes
         console.log("success");
@@ -69,4 +65,29 @@ const PersistLogin = () => {
 
     return content;
 };
+
+const RenderReLogin = ({ error }) => {
+    return (
+        <div className="pt-32 md:pt-52 flex flex-col justify-center items-center">
+            <ExclamationTriangleIcon className="w-40 h-40 text-secondary-200" />
+            <span className="pt-10 text-secondary-600 font-semibold text-xl">{error?.data?.message} </span>
+            <Link
+                className="flex justify-center items-center px-4 py-2 mt-16 rounded text-white bg-primary-600 hover:bg-primary-500"
+                to="/login"
+            >
+                Please Login
+            </Link>
+        </div>
+    );
+};
+
+const RenderLoading = () => {
+    return (
+        <div className="pt-32 md:pt-52 flex flex-col justify-center items-center">
+            <ArrowPathIcon className="w-40 h-40 text-secondary-200" />
+            <span className="pt-10 text-secondary-600 font-semibold text-xl">Loading please Wait</span>
+        </div>
+    );
+};
+
 export default PersistLogin;

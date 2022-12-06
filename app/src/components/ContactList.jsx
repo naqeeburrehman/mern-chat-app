@@ -1,16 +1,14 @@
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import { useGetSearchsQuery } from "../features/search/searchApiSlice";
 
 const ContactList = ({ contacts, add }) => {
-    console.log("contactlist rendered");
     if (contacts && contacts.ids.length > 0) {
         const { entities } = contacts;
         let contactCards = [];
         Object.keys(entities).forEach((key, index) => {
             contactCards.push(<ContactCard key={entities[key]._id} data={entities[key]} add={add} />);
         });
-        return <div className="px-1 py-2 ">{contactCards}</div>;
+        return <div className="px-1 py-2">{contactCards}</div>;
     } else return null;
 };
 
@@ -18,31 +16,39 @@ const ContactCard = ({ data, add }) => {
     return add ? (
         <div className="rounded-xl w-full bg-secondary-100  flex justify-between items-center mb-1 px-3 py-2">
             <div className="flex items-center">
-                <img className="w-12 h-12 rounded-full" src={data.img} alt="profile image" />
+                <Link to={`/profile/${data._id}`}>
+                    <img className="w-12 h-12 rounded-full" src={data.img} alt="profile image" />
+                </Link>
                 <div className="pl-4 flex flex-col">
                     <span className="text-secondary-600 text-lg font-semibold">{data.name}</span>
                     <span className="text-primary-600 text-sm">{data.name}</span>
                 </div>
             </div>
-            <span className="bg-secondary-200 rounded px-2 py-1">{data.phone}</span>
-            <button className="bg-primary-600 hover:bg-primary-500 text-secondary-100 rounded p-2 ">
-                <ChatBubbleLeftEllipsisIcon className="w-6 h-6" />
-            </button>
+            <div className="flex justify-center items-center">
+                <span className="bg-secondary-200 rounded text-sm mx-2 px-2 py-1">{data.phone}</span>
+                <Link
+                    to={`/chat/${data._id}`}
+                    className="bg-primary-600 hover:bg-primary-500 text-secondary-100 rounded p-2 "
+                >
+                    <ChatBubbleLeftEllipsisIcon className="w-6 h-6" />
+                </Link>
+            </div>
         </div>
     ) : (
-        <Link
-            to="/chat"
-            className="rounded-xl bg-secondary-100 hover:bg-secondary-50 flex justify-between items-center mb-1 px-3 py-2"
-        >
-            <div className="flex items-center">
-                <img className="w-12 h-12 rounded-full" src={data.img} alt="profile image" />
-                <div className="pl-4 flex flex-col">
-                    <span className="text-secondary-600 text-lg font-semibold">{data.name}</span>
-                    <span className="text-primary-600 text-sm">{data.name}</span>
+        <div className="rounded-xl bg-secondary-100 hover:bg-secondary-50 flex mb-1">
+            <Link to={`/profile/${data._id}`}>
+                <img className="w-12 h-12 mx-3 my-2 rounded-full" src={data.img} alt="profile image" />
+            </Link>
+            <Link to={`/chat/${data._id}`} className="w-full flex justify-between items-center px-3 py-2">
+                <div className="flex items-center">
+                    <div className="pl-4 flex flex-col">
+                        <span className="text-secondary-600 text-lg font-semibold">{data.name}</span>
+                        <span className="text-primary-600 text-sm">{data.name}</span>
+                    </div>
                 </div>
-            </div>
-            <span className="bg-secondary-200 rounded px-2 py-1">{data.phone}</span>
-        </Link>
+                <span className="bg-secondary-200 rounded text-sm px-2 py-1">{data.phone}</span>
+            </Link>
+        </div>
     );
 };
 

@@ -3,6 +3,7 @@ import Layout from "./components/Layout";
 
 import Login from "./pages/globalPages/Login";
 import Signup from "./pages/globalPages/Signup";
+import NotFound from "./pages/globalPages/NotFound";
 import Home from "./pages/authPages/Home";
 import Search from "./pages/authPages/Search";
 import Profile from "./pages/authPages/Profile";
@@ -33,12 +34,13 @@ function App() {
                         <Route element={<Prefetch />}>
                             <Route index element={<Home />} />
                             <Route path="search" element={<Search />} />
-                            <Route path="profile" element={<Profile />} />
-                            <Route path="chat" element={<Chat />} />
+                            <Route path="profile/:id" element={<Profile />} />
+                            <Route path="chat/:id" element={<Chat />} />
                             <Route element={<RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />}></Route>
                         </Route>
                     </Route>
                 </Route>
+                <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>
     );

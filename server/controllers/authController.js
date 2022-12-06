@@ -25,7 +25,7 @@ const handleLogin = async (req, res) => {
         const roles = Object.values(foundUser.roles).filter(Boolean);
         // create JWTs
 
-        const accessToken = jwtFunctions.generateAccessToken({ name: foundUser.name, id: foundUser.id }, roles);
+        const accessToken = jwtFunctions.generateAccessToken({ username: foundUser.name, id: foundUser.id }, roles);
         const newRefreshToken = jwtFunctions.generateRefreshToken(foundUser.id);
 
         // Changed to let keyword

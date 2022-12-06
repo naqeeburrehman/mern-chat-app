@@ -1,3 +1,4 @@
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import ContactList from "../../components/ContactList";
@@ -10,6 +11,7 @@ const Search = () => {
     const {
         data: contacts,
         isLoading,
+        isFetching,
         isSuccess,
         isError,
         error,
@@ -20,7 +22,6 @@ const Search = () => {
             refetchOnMountOrArgChange: true,
         }
     );
-
     const onSearch = (e, searchValue) => {
         e.preventDefault();
         if (searchValue) {
@@ -28,19 +29,17 @@ const Search = () => {
             setSkip(false);
         }
     };
-
     let contactlist;
-    if (isLoading) {
-        console.log("i am loading :D");
-        contactlist = <span>Will be adding Skeleton Here Later</span>;
-    }
     if (isError) {
-        contactlist = <span>{error}</span>;
+        contactlist = <IfNotSuccess message={error} />;
     }
     if (isSuccess && contacts) {
-        contactlist = <ContactList contacts={contacts} add={true} />;
+        if (contacts.ids.length > 0) contactlist = <ContactList contacts={contacts} add={true} />;
+        else contactlist = <IfNotSuccess message={"No Contacts Found"} />;
     }
-    console.log("Search Page Rendered");
+    if (isFetching) {
+        contactlist = <Skeleton />;
+    }
     return (
         <section>
             <Navbar path={"/"} title={"Search"} />
@@ -50,11 +49,17 @@ const Search = () => {
     );
 };
 
+const IfNotSuccess = ({ message }) => {
+    return (
+        <div className="pt-24 md:pt-40 flex flex-col justify-center items-center">
+            <ExclamationCircleIcon className="w-40 h-40 text-secondary-200" />
+            <span className="pt-10 text-secondary-600 font-semibold text-xl">{message}</span>
+        </div>
+    );
+};
+
 const SearchBar = ({ onSearch }) => {
     const [searchValue, setSearchValue] = useState("");
-
-    console.log("Search Bar Rendered");
-
     return (
         <form
             onSubmit={(e) => {
@@ -73,6 +78,51 @@ const SearchBar = ({ onSearch }) => {
                 <MagnifyingGlassIcon className="w-6 h-6" />
             </button>
         </form>
+    );
+};
+
+const Skeleton = () => {
+    return (
+        <div
+            role="status"
+            className="p-4 space-y-4 rounded border border-secondary-200 divide-y divide-secondary-200 shadow animate-pulse "
+        >
+            <div className="flex justify-between items-center">
+                <div>
+                    <div className="h-2.5 bg-secondary-300 rounded-full w-24 mb-2.5"></div>
+                    <div className="w-32 h-2 bg-secondary-200 rounded-full"></div>
+                </div>
+                <div className="h-2.5 bg-secondary-300 rounded-full w-12"></div>
+            </div>
+            <div className="flex justify-between items-center pt-4">
+                <div>
+                    <div className="h-2.5 bg-secondary-300 rounded-full w-24 mb-2.5"></div>
+                    <div className="w-32 h-2 bg-secondary-200 rounded-full"></div>
+                </div>
+                <div className="h-2.5 bg-secondary-300 rounded-full w-12"></div>
+            </div>
+            <div className="flex justify-between items-center pt-4">
+                <div>
+                    <div className="h-2.5 bg-secondary-300 rounded-full w-24 mb-2.5"></div>
+                    <div className="w-32 h-2 bg-secondary-200 rounded-full"></div>
+                </div>
+                <div className="h-2.5 bg-secondary-300 rounded-full w-12"></div>
+            </div>
+            <div className="flex justify-between items-center pt-4">
+                <div>
+                    <div className="h-2.5 bg-secondary-300 rounded-full w-24 mb-2.5"></div>
+                    <div className="w-32 h-2 bg-secondary-200 rounded-full"></div>
+                </div>
+                <div className="h-2.5 bg-secondary-300 rounded-full w-12"></div>
+            </div>
+            <div className="flex justify-between items-center pt-4">
+                <div>
+                    <div className="h-2.5 bg-secondary-300 rounded-full w-24 mb-2.5"></div>
+                    <div className="w-32 h-2 bg-secondary-200 rounded-full"></div>
+                </div>
+                <div className="h-2.5 bg-secondary-300 rounded-full w-12"></div>
+            </div>
+        </div>
     );
 };
 
