@@ -1,7 +1,22 @@
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { useGetChatsQuery } from "../features/chat/chatApiSlice";
 
-const ContactList = ({ contacts, add }) => {
+const ContactList = ({ add }) => {
+    const {
+        data: contacts,
+        isLoading,
+        isFetching,
+        isSuccess,
+        isError,
+        error,
+    } = useGetChatsQuery(
+        { u: " ", q: 12 },
+        {
+            refetchOnFocus: true,
+            refetchOnMountOrArgChange: true,
+        }
+    );
     if (contacts && contacts.ids.length > 0) {
         const { entities } = contacts;
         let contactCards = [];
