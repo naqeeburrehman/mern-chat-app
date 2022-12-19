@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSendLogoutMutation } from "../features/auth/authApiSlice";
 import useAuth from "../hooks/useAuth";
-const Navbar = ({ path, title, icon }) => {
+const Navbar = ({ path, title, titleLink, icon }) => {
     const { id } = useAuth();
     const [sendLogout, { isLoading, isSuccess, isError, error }] = useSendLogoutMutation();
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ const Navbar = ({ path, title, icon }) => {
                 <Link className="p-1 rounded hover:bg-primary-600 " to={path}>
                     <button className="block w-6 h-6">{icon ? icon : <ArrowLeftIcon />}</button>
                 </Link>
-                <span className="">{title}</span>
+                <Link to={titleLink}>{title}</Link>
                 <div className="relative">
                     <div onClick={() => setMenu(!menu)} className="cursor-pointer p-1 rounded hover:bg-primary-600">
                         {menu ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
@@ -35,7 +35,7 @@ const Navbar = ({ path, title, icon }) => {
                     >
                         <Link
                             onClick={() => setMenu(!menu)}
-                            to={`/new-group`}
+                            to={`/group`}
                             className="flex items-center pl-4 px-2 py-1 m-1 rounded hover:bg-primary-500"
                         >
                             <UserGroupIcon className="mr-1 w-5 h-5" />

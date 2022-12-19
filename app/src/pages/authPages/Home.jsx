@@ -12,7 +12,7 @@ const Home = () => {
         isError,
         error,
     } = useGetChatsQuery(
-        { u: " ", q: 12 },
+        { u: " ", q: 120 },
         {
             refetchOnMountOrArgChange: true,
         }

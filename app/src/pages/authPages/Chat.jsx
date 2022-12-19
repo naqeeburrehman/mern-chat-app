@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import ChatWindow from "../../components/ChatWindow";
 import Navbar from "../../components/Navbar";
 
@@ -29,9 +30,11 @@ const Chat = () => {
         { id: "03135awd743707", name: "Khaqan", status: false, message: "asfasdad", received: true },
     ]);
 
+    const { id } = useParams();
+
     return (
         <section>
-            <Navbar path={"/"} title={"Chat"} />
+            <Navbar path={"/"} title={"Chat"} titleLink={`/chat-details/${id}`} />
             <ChatWindow chat={chat} />
         </section>
     );

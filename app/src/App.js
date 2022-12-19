@@ -9,7 +9,6 @@ import Search from "./pages/authPages/Search";
 import Profile from "./pages/authPages/Profile";
 import Chat from "./pages/authPages/Chat";
 import Group from "./pages/authPages/Group";
-import NewGroup from "./pages/authPages/NewGroup";
 
 import Prefetch from "./features/auth/Prefetch";
 import PersistUnprotected from "./features/auth/PersistUnprotected";
@@ -17,6 +16,7 @@ import PersistProtected from "./features/auth/PersistProtected";
 import RequireAuth from "./features/auth/RequireAuth";
 import { ROLES } from "./config/roles";
 import useTitle from "./hooks/useTitle";
+import ChatDetails from "./pages/authPages/ChatDetails";
 
 function App() {
     useTitle("Mern Auth Aest");
@@ -38,8 +38,8 @@ function App() {
                             <Route path="search" element={<Search />} />
                             <Route path="profile/:id" element={<Profile />} />
                             <Route path="chat/:id" element={<Chat />} />
-                            <Route path="group/:id" element={<Group />} />
-                            <Route path="new-group" element={<NewGroup />} />
+                            <Route path="chat-details/:id" element={<ChatDetails />} />
+                            <Route path="group" element={<Group />} />
                             <Route element={<RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />}></Route>
                         </Route>
                     </Route>

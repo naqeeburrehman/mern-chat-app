@@ -9,6 +9,7 @@ const createGroupChat = async (req, res) => {
     const { users, name } = req.body;
     if (!req.body?.users || !req.body?.name) return res.status(400).json({ message: "please fill all the fields" });
     if (users.length < 2) return res.status(400).json({ message: "More than 2 users are required" });
+    users.push(req.user)
     try {
         const groupChat = await chatModel.create({
             chatName: name,
@@ -22,7 +23,7 @@ const createGroupChat = async (req, res) => {
             .populate("groupAdmin", "-password -refreshToken -roles -delete");
         return res.status(201).json({ message: "group created", chat: fullGroupChat });
     } catch (error) {
-        return res.status(500).josn({ message: "server error occured" });
+        return res.status(500).json({ message: "server error occured" });
     }
 };
 

@@ -23,7 +23,7 @@ const ContactCard = ({ data, add }) => {
     const onAccessChat = async (userId) => {
         console.log(userId);
         try {
-            await accessChat({ userId}).unwrap();
+            await accessChat({ userId }).unwrap();
             navigate(`/chat/${data._id}`);
             toast.success("Car Added");
         } catch (err) {
@@ -31,11 +31,14 @@ const ContactCard = ({ data, add }) => {
         }
     };
 
+    let userData;
+
     if (!add) {
         data.users.forEach((user) => {
-            if (id !== user._id) return (data = user);
+            if (id !== user._id) return (userData = user);
         });
     }
+
     return add ? (
         <div className="rounded-xl w-full bg-secondary-100  flex justify-between items-center mb-1 px-3 py-2">
             <div className="flex items-center">
@@ -60,17 +63,21 @@ const ContactCard = ({ data, add }) => {
         </div>
     ) : (
         <div className="rounded-xl bg-secondary-100 hover:bg-secondary-50 flex mb-1">
-            <Link to={`/profile/${data._id}`}>
-                <img className="w-12 h-12 mx-3 my-2 rounded-full" src={data.img} alt="profile image" />
+            <Link to={`/profile/${userData._id}`}>
+                <img className="w-12 h-12 mx-3 my-2 rounded-full" src={userData.img} alt="profile image" />
             </Link>
-            <Link to={`/chat/${data._id}`} className="w-full flex justify-between items-center px-3 py-2">
+            <Link to={`/chat/${userData._id}`} className="w-full flex justify-between items-center px-3 py-2">
                 <div className="flex items-center">
                     <div className="pl-4 flex flex-col">
-                        <span className="text-secondary-600 text-lg font-semibold">{data.name}</span>
-                        <span className="text-primary-600 text-sm">{data.name}</span>
+                        <span className="text-secondary-600 text-lg font-semibold">
+                            {data.isGroupChat ? data.chatName : userData.name}
+                        </span>
+                        <span className="text-primary-600 text-sm">{userData.phone}</span>
                     </div>
                 </div>
-                <span className="bg-secondary-200 rounded text-sm px-2 py-1">{data.phone}</span>
+                <span className="bg-secondary-200 rounded text-sm px-2 py-1">
+                    {data.latestMessage ? data.latestMessage : userData.phone}
+                </span>
             </Link>
         </div>
     );
