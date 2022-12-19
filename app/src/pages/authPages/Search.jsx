@@ -10,7 +10,6 @@ const Search = () => {
     const [searchQuery, setSearchQuery] = useState({ u: "", q: 24 });
     const {
         data: contacts,
-        isLoading,
         isFetching,
         isSuccess,
         isError,

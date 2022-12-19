@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, Bars3Icon, PowerIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { UserIcon } from "@heroicons/react/24/outline";
+import { UserGroupIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSendLogoutMutation } from "../features/auth/authApiSlice";
@@ -31,12 +31,20 @@ const Navbar = ({ path, title, icon }) => {
                     <div
                         className={`${
                             menu ? "flex" : "hidden"
-                        } flex-col rounded absolute -right-2 top-0 mt-14 p-2 bg-primary-600`}
+                        } flex-col rounded absolute -right-2 top-0 w-40 mt-14 p-2 bg-primary-600`}
                     >
                         <Link
                             onClick={() => setMenu(!menu)}
+                            to={`/new-group`}
+                            className="flex items-center pl-4 px-2 py-1 m-1 rounded hover:bg-primary-500"
+                        >
+                            <UserGroupIcon className="mr-1 w-5 h-5" />
+                            <span>New Group</span>
+                        </Link>
+                        <Link
+                            onClick={() => setMenu(!menu)}
                             to={`/profile/${id}`}
-                            className="flex justify-center items-center px-2 py-1 m-1 rounded hover:bg-primary-500"
+                            className="flex items-center pl-4 px-2 py-1 m-1 rounded hover:bg-primary-500"
                         >
                             <UserIcon className="mr-1 w-5 h-5" />
                             <span>Profile</span>
@@ -46,7 +54,7 @@ const Navbar = ({ path, title, icon }) => {
                             disabled={isLoading}
                             onClick={sendLogout}
                             to="/logout"
-                            className="flex justify-center items-center px-2 py-1 m-1 rounded hover:bg-primary-500"
+                            className="flex  items-center pl-4 px-2 py-1 m-1 rounded hover:bg-primary-500"
                         >
                             <PowerIcon className="mr-1 w-5 h-5" />
                             <span>Logout</span>

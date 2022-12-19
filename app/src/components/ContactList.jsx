@@ -1,22 +1,10 @@
 import { ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
-import { useGetChatsQuery } from "../features/chat/chatApiSlice";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAccessChatMutation } from "../features/chat/chatApiSlice";
+import useAuth from "../hooks/useAuth";
 
-const ContactList = ({ add }) => {
-    const {
-        data: contacts,
-        isLoading,
-        isFetching,
-        isSuccess,
-        isError,
-        error,
-    } = useGetChatsQuery(
-        { u: " ", q: 12 },
-        {
-            refetchOnFocus: true,
-            refetchOnMountOrArgChange: true,
-        }
-    );
+const ContactList = ({ contacts, add }) => {
     if (contacts && contacts.ids.length > 0) {
         const { entities } = contacts;
         let contactCards = [];
@@ -28,6 +16,26 @@ const ContactList = ({ add }) => {
 };
 
 const ContactCard = ({ data, add }) => {
+    const { id } = useAuth();
+    const [accessChat, { isLoading }] = useAccessChatMutation();
+    const navigate = useNavigate();
+
+    const onAccessChat = async (userId) => {
+        console.log(userId);
+        try {
+            await accessChat({ userId}).unwrap();
+            navigate(`/chat/${data._id}`);
+            toast.success("Car Added");
+        } catch (err) {
+            if (err) toast.error(err?.data?.message);
+        }
+    };
+
+    if (!add) {
+        data.users.forEach((user) => {
+            if (id !== user._id) return (data = user);
+        });
+    }
     return add ? (
         <div className="rounded-xl w-full bg-secondary-100  flex justify-between items-center mb-1 px-3 py-2">
             <div className="flex items-center">
@@ -41,12 +49,13 @@ const ContactCard = ({ data, add }) => {
             </div>
             <div className="flex justify-center items-center">
                 <span className="bg-secondary-200 rounded text-sm mx-2 px-2 py-1">{data.phone}</span>
-                <Link
-                    to={`/chat/${data._id}`}
+                <button
+                    type="button"
+                    onClick={() => onAccessChat(data._id)}
                     className="bg-primary-600 hover:bg-primary-500 text-secondary-100 rounded p-2 "
                 >
                     <ChatBubbleLeftEllipsisIcon className="w-6 h-6" />
-                </Link>
+                </button>
             </div>
         </div>
     ) : (

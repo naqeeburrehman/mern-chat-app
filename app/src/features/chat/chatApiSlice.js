@@ -27,10 +27,21 @@ export const chatsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: "Chat", id: "LIST" }];
             },
         }),
+        accessChat: builder.mutation({
+            query(data) {
+                return {
+                    url: "chat",
+                    method: "POST",
+                    credentials: "include",
+                    body: data,
+                };
+            },
+            invalidatesTags: (result, error, arg) => [{ type: "Car", id: arg.id }],
+        }),
     }),
 });
 
-export const { useGetChatsQuery } = chatsApiSlice;
+export const { useGetChatsQuery, useAccessChatMutation } = chatsApiSlice;
 
 // returns the query result object
 export const selectChatsResult = chatsApiSlice.endpoints.getChats.select();

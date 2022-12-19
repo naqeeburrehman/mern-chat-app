@@ -8,6 +8,8 @@ import Home from "./pages/authPages/Home";
 import Search from "./pages/authPages/Search";
 import Profile from "./pages/authPages/Profile";
 import Chat from "./pages/authPages/Chat";
+import Group from "./pages/authPages/Group";
+import NewGroup from "./pages/authPages/NewGroup";
 
 import Prefetch from "./features/auth/Prefetch";
 import PersistUnprotected from "./features/auth/PersistUnprotected";
@@ -36,6 +38,8 @@ function App() {
                             <Route path="search" element={<Search />} />
                             <Route path="profile/:id" element={<Profile />} />
                             <Route path="chat/:id" element={<Chat />} />
+                            <Route path="group/:id" element={<Group />} />
+                            <Route path="new-group" element={<NewGroup />} />
                             <Route element={<RequireAuth allowedRoles={[ROLES.Manager, ROLES.Admin]} />}></Route>
                         </Route>
                     </Route>
