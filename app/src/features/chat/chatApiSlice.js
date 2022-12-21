@@ -36,12 +36,23 @@ export const chatsApiSlice = apiSlice.injectEndpoints({
                     body: data,
                 };
             },
-            invalidatesTags: (result, error, arg) => [{ type: "Car", id: arg.id }],
+            invalidatesTags: (result, error, arg) => [{ type: "Chat", id: arg.id }],
+        }),
+        createGroup: builder.mutation({
+            query(data) {
+                return {
+                    url: "group",
+                    method: "POST",
+                    credentials: "include",
+                    body: data,
+                };
+            },
+            invalidatesTags: (result, error, arg) => [{ type: "Chat", id: arg.id }],
         }),
     }),
 });
 
-export const { useGetChatsQuery, useAccessChatMutation } = chatsApiSlice;
+export const { useGetChatsQuery, useAccessChatMutation,useCreateGroupMutation } = chatsApiSlice;
 
 // returns the query result object
 export const selectChatsResult = chatsApiSlice.endpoints.getChats.select();

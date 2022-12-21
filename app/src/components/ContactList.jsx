@@ -25,7 +25,6 @@ const ContactCard = ({ data, add }) => {
         try {
             await accessChat({ userId }).unwrap();
             navigate(`/chat/${data._id}`);
-            toast.success("Car Added");
         } catch (err) {
             if (err) toast.error(err?.data?.message);
         }
@@ -63,10 +62,10 @@ const ContactCard = ({ data, add }) => {
         </div>
     ) : (
         <div className="rounded-xl bg-secondary-100 hover:bg-secondary-50 flex mb-1">
-            <Link to={`/profile/${userData._id}`}>
+            <Link to={`${data.isGroupChat ? "/chat-details/" + data._id : "/profile/" + userData._id}`}>
                 <img className="w-12 h-12 mx-3 my-2 rounded-full" src={userData.img} alt="profile image" />
             </Link>
-            <Link to={`/chat/${userData._id}`} className="w-full flex justify-between items-center px-3 py-2">
+            <Link to={`/chat/${data._id}`} className="w-full flex justify-between items-center px-3 py-2">
                 <div className="flex items-center">
                     <div className="pl-4 flex flex-col">
                         <span className="text-secondary-600 text-lg font-semibold">

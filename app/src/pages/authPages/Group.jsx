@@ -1,9 +1,11 @@
 import { ExclamationCircleIcon, UserMinusIcon, UserPlusIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "../../components/Navbar";
 import { useGetSearchsQuery } from "../../features/search/searchApiSlice";
+import { useCreateGroupMutation } from "../../features/chat/chatApiSlice";
 
 const Group = () => {
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -18,7 +20,6 @@ const Group = () => {
     const onRemoveUser = (user) => {
         setSelectedUsers(selectedUsers.filter((item) => item._id !== user._id));
     };
-    console.log("main component rendered");
     return (
         <section>
             <Navbar path={"/"} title={"Create Group"} />
@@ -30,7 +31,6 @@ const Group = () => {
 };
 
 const SelectedUsersList = ({ selectedUsers, onRemoveUser }) => {
-    console.log("selected users list rendered");
     return (
         <div className="border-2 border-dashed border-secondary-300 h-40 overflow-scroll rounded-2xl m-2 p-1 flex flex-wrap">
             {selectedUsers.map((user) => (
@@ -60,17 +60,37 @@ const SelectedUsersList = ({ selectedUsers, onRemoveUser }) => {
     );
 };
 
-const GroupForm = () => {
+const GroupForm = ({ selectedUsers }) => {
     const [newGroupName, setNewGroupName] = useState("");
-    let isLoading = false;
-    const createGroup = () => {
-        setTimeout(() => {
-            isLoading = false;
-        }, 3000);
-        isLoading = true;
-        setNewGroupName("");
+    const [createGroup, { isLoading }] = useCreateGroupMutation();
+    const [errMsg, setErrMsg] = useState("");
+    const navigate = useNavigate();
+
+    const onCreateGroup = async () => {
+        if (newGroupName.length != 0 && selectedUsers.length > 0) {
+            let users = selectedUsers.map((selectedUser) => {
+                return selectedUser._id;
+            });
+            try {
+                await createGroup({ users, name: newGroupName }).unwrap();
+                setNewGroupName("");
+                navigate("/");
+            } catch (err) {
+                if (!err.originalStatus && !err.status) {
+                    setErrMsg("No Server Response");
+                } else if (err.originalStatus === 400 || err.status === 400) {
+                    setErrMsg("Missing Phone or Password");
+                } else if (err.originalStatus === 429 || err.status === 429) {
+                    setErrMsg("Too many Requests");
+                } else if (err.originalStatus === 401 || err.status === 401) {
+                    setErrMsg(err?.data?.message || err?.data || "Unauthorized");
+                } else {
+                    setErrMsg(err?.data || "internal Server Error");
+                }
+            }
+        }
     };
-    console.log("form rendered");
+
     return (
         <div className="flex justify-evenly items-center bg-secondary-100 w-full h-full">
             <div className="flex flex-col my-2 ">
@@ -84,7 +104,7 @@ const GroupForm = () => {
                 />
             </div>
             <button
-                onClick={createGroup}
+                onClick={onCreateGroup}
                 disabled={isLoading}
                 className={`px-4 py-2 my-4 rounded text-white ${
                     isLoading ? "bg-secondary-400" : "bg-primary-600 hover:bg-primary-500"

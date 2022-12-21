@@ -8,7 +8,7 @@ const fs = require("fs");
 const createGroupChat = async (req, res) => {
     const { users, name } = req.body;
     if (!req.body?.users || !req.body?.name) return res.status(400).json({ message: "please fill all the fields" });
-    if (users.length < 2) return res.status(400).json({ message: "More than 2 users are required" });
+    if (users.length < 1) return res.status(400).json({ message: "More than 2 users are required" });
     users.push(req.user)
     try {
         const groupChat = await chatModel.create({
