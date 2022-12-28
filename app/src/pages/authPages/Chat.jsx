@@ -34,7 +34,7 @@ const Chat = () => {
 
     return (
         <section>
-            <Navbar path={"/"} title={"Chat"} titleLink={`/chat-details/${id}`} />
+            <Navbar path={"/"} title={"Chat Details"} titleLink={`/chat-details/${id}`} />
             <ChatWindow chat={chat} />
         </section>
     );

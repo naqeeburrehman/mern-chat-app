@@ -26,7 +26,7 @@ const Details = () => {
         );
     return (
         <section>
-            <Navbar path={`/chat/${params.id}`} title={"Chat Details"} />
+            <Navbar path={`/chat/${params.id}`} title={"Chat"} titleLink={`/chat/${id}`} />
             {content}
         </section>
     );

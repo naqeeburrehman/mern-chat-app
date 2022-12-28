@@ -23,7 +23,7 @@ const ContactCard = ({ data, add }) => {
     const onAccessChat = async (userId) => {
         console.log(userId);
         try {
-            await accessChat({ userId }).unwrap();
+            let data = await accessChat({ userId }).unwrap();
             navigate(`/chat/${data._id}`);
         } catch (err) {
             if (err) toast.error(err?.data?.message);

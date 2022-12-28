@@ -7,7 +7,7 @@ import { useGetChatsQuery } from "../../features/chat/chatApiSlice";
 const Home = () => {
     const {
         data: contacts,
-        isFetching,
+        isLoading,
         isSuccess,
         isError,
         error,
@@ -25,7 +25,7 @@ const Home = () => {
         if (contacts.ids.length > 0) contactlist = <ContactList contacts={contacts} />;
         else contactlist = <IfNotSuccess message={"No Contacts Found"} />;
     }
-    if (isFetching) {
+    if (isLoading) {
         contactlist = <Skeleton />;
     }
     return (
